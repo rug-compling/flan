@@ -63,6 +63,12 @@ class AnnotateMainWindow < Qt::MainWindow
     pos = settings.value('pos', Qt::Variant.new(Qt::Point.new(200, 200))).toPoint
     move(pos)
     
+    # Splitter states
+    state = settings.value('indexDetailSplitter').toByteArray
+    @base.indexDetailSplitter.restoreState(state)
+    state = settings.value('structRelSplitter').toByteArray
+    @base.structRelSplitter.restoreState(state)
+    
     # Login
     server = settings.value('server').toString
     @connectDialog.server = server
@@ -122,7 +128,7 @@ class AnnotateMainWindow < Qt::MainWindow
     
     realizations = @client.realizations(lfId)
     
-    for rel in realizations
+    realizations.each { |rel|
       item = JudgmentItem.new(rel[:sentence])
       item.setEditable(false)
       item.logicalFormId = rel[:logicalFormId]
@@ -136,7 +142,7 @@ class AnnotateMainWindow < Qt::MainWindow
       item.setCheckState(check)
       item.setCheckable(true)
       model.appendRow(item)
-    end
+    }
     
     Qt::Object.connect(model, SIGNAL('itemChanged(QStandardItem *)'),
       self, SLOT('judgmentChanged(QStandardItem *)'))
@@ -150,6 +156,12 @@ class AnnotateMainWindow < Qt::MainWindow
     # Window geometry
     settings.setValue('pos', Qt::Variant.new(pos))
     settings.setValue('size', Qt::Variant.new(size))
+    
+    # Splitter states
+    settings.setValue('indexDetailSplitter',
+      Qt::Variant.new(@base.indexDetailSplitter.saveState))
+    settings.setValue('structRelSplitter',
+      Qt::Variant.new(@base.structRelSplitter.saveState))
     
     # Login
     settings.setValue('server', Qt::Variant.new(@connectDialog.server))

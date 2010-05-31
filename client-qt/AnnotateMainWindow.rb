@@ -8,13 +8,7 @@ class JudgmentItem < Qt::StandardItem
   attr_accessor :logicalFormId, :realizationId, :judgmentId
 end
 
-class AnnotateMainWindow < Qt::MainWindow
-  slots 'close()', 'lfChanged(int)', 'showLfs()', 'judgmentChanged(QStandardItem *)',
-    'zoomIn(bool)', 'zoomOut(bool)'
-    
-    ZOOM_OUT_FACTOR = 0.8
-    ZOOM_IN_FACTOR = 1.0 / ZOOM_OUT_FACTOR
-  
+class AnnotateMainWindow < Qt::MainWindow  
   def initialize(parent = nil)
     # Set up user interface
     super
@@ -41,6 +35,14 @@ class AnnotateMainWindow < Qt::MainWindow
     writeSettings
     super
   end
+
+  private
+  
+  slots 'close()', 'lfChanged(int)', 'showLfs()', 'judgmentChanged(QStandardItem *)',
+    'zoomIn(bool)', 'zoomOut(bool)'
+    
+  ZOOM_OUT_FACTOR = 0.8
+  ZOOM_IN_FACTOR = 1.0 / ZOOM_OUT_FACTOR
   
   def judgmentChanged(item)
     if (item.checkState == Qt::Checked)

@@ -9,7 +9,11 @@ class JudgmentItem < Qt::StandardItem
 end
 
 class AnnotateMainWindow < Qt::MainWindow
-  slots 'close()', 'lfChanged(int)', 'showLfs()', 'judgmentChanged(QStandardItem *)'
+  slots 'close()', 'lfChanged(int)', 'showLfs()', 'judgmentChanged(QStandardItem *)',
+    'zoomIn(bool)', 'zoomOut(bool)'
+    
+    ZOOM_OUT_FACTOR = 0.8
+    ZOOM_IN_FACTOR = 1.0 / ZOOM_OUT_FACTOR
   
   def initialize(parent = nil)
     # Set up user interface
@@ -24,6 +28,9 @@ class AnnotateMainWindow < Qt::MainWindow
     @connectDialog = ConnectDialog.new(self)
     Qt::Object.connect(@connectDialog, SIGNAL('rejected()'), self, SLOT('close()'))
     Qt::Object.connect(@connectDialog, SIGNAL('accepted()'), self, SLOT('showLfs()'))
+    
+    Qt::Object.connect(@base.zoomInAction, SIGNAL('triggered(bool)'), self, SLOT('zoomIn(bool)'))
+    Qt::Object.connect(@base.zoomOutAction, SIGNAL('triggered(bool)'), self, SLOT('zoomOut(bool)'))
     
     readSettings
     
@@ -107,6 +114,7 @@ class AnnotateMainWindow < Qt::MainWindow
     scene.addItem(svgGraphicsItem)
     
     @base.structureGraphicsView.setScene(scene)
+    @base.structureGraphicsView.fitInView(svgGraphicsItem, Qt::KeepAspectRatio)
   end
 
   def showRealizations(lfId)
@@ -146,5 +154,13 @@ class AnnotateMainWindow < Qt::MainWindow
     # Login
     settings.setValue('server', Qt::Variant.new(@connectDialog.server))
     settings.setValue('email', Qt::Variant.new(@connectDialog.email))
+  end
+  
+  def zoomIn(checked)
+    @base.structureGraphicsView.scale(ZOOM_IN_FACTOR, ZOOM_IN_FACTOR)
+  end
+  
+  def zoomOut(checked)
+    @base.structureGraphicsView.scale(ZOOM_OUT_FACTOR, ZOOM_OUT_FACTOR)
   end
 end

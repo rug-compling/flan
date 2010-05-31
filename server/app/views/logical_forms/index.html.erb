@@ -1,0 +1,23 @@
+<h1>Listing logical_forms</h1>
+
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Data</th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @logical_forms.each do |logical_form| %>
+  <tr>
+    <td><%= logical_form.key %></td>
+    <td><%= link_to 'Show', logical_form %></td>
+    <td><%= link_to 'Edit', edit_logical_form_path(logical_form) %></td>
+    <td><%= link_to 'Destroy', logical_form, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Logical form', new_logical_form_path %>

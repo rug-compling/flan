@@ -1,0 +1,2 @@
+module LogicalFormsHelper
+end

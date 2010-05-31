@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+require 'AnnotateMainWindow'
+
+app = Qt::Application.new(ARGV)
+window = AnnotateMainWindow.new
+window.show
+app.exec

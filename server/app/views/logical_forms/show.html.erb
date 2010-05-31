@@ -1,0 +1,15 @@
+<p class="notice"><%= notice %></p>
+
+<p>
+  <b>Key:</b>
+  <%= @logical_form.key %>
+</p>
+
+<p>
+  <b>Data:</b>
+  <%= @logical_form.data %>
+</p>
+
+
+<%= link_to 'Edit', edit_logical_form_path(@logical_form) %> |
+<%= link_to 'Back', logical_forms_path %>

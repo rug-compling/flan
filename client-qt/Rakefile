@@ -1,20 +1,4 @@
-require 'rake/gempackagetask'
-
 UI_FILES = FileList['ui/*.ui']
-
-spec = Gem::Specification.new do |s|
-  s.name	= "flan_client"
-  s.summary	= "Client for Flan (fluency annotation) servers"
-  s.version = '0.0.1'
-  s.author = 'Daniel de Kok'
-  s.email = 'me@danieldk.eu'
-  s.platform = 'Gem::Platform::RUBY'
-  s.required_ruby_version = '>=1.8'
-  s.files = Dir['**/**']
-  s.executables = [ 'annotate' ]
-end
-
-Rake::GemPackageTask.new(spec).define
 
 task :default => [:uic]
 

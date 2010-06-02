@@ -6,8 +6,8 @@ task :uic do
   UI_FILES.each { |uiFile|
     base = File.basename(uiFile, '.ui')
     rbFile = "ui_#{base}.rb"
-    if !system('rbuic4', '-o', "lib/flan_client/#{rbFile}", uiFile)
-      STDERR.puts("Could not generate #{rbFile}")
+    if !system('rbuic4', '-o', "lib/ui/#{rbFile}", uiFile)
+      STDERR.puts("Could not generate #{rbFile}...")
     end
   }
 end

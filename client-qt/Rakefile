@@ -1,0 +1,13 @@
+UI_FILES = FileList['*.ui']
+
+task :default => [:uic]
+
+task :uic do
+  UI_FILES.each { |uiFile|
+    base = File.basename(uiFile, '.ui')
+    rbFile = "ui_#{base}.rb"
+    if !system('rbuic4', '-o', rbFile, uiFile)
+      STDERR.puts("Could not generate #{rbFile}")
+    end
+  }
+end

@@ -14,13 +14,18 @@ Dir.glob("#{DATADIR}/ADT/*.xml").each { |xmlFile|
   adt = File.open(xmlFile, 'r').read()
   id = File.basename(xmlFile, '.xml')
   pdf = File.open("#{DATADIR}/PDF/#{id}.pdf.base64").read()
+  begin
+    rels = File.open("#{DATADIR}/rels/#{id}.txt").readlines
+  rescue
+    next
+  end
   
   lf = LogicalForm.create(:key => id,
     :data => adt,
     :pdf => pdf)
-  
-  1.upto(10).each { |n|
+ 
+  rels.each { |rel|
     Realization.create(:logical_form => lf,
-      :sentence => "Realization #{n}")
+      :sentence => rel)
   }
 }

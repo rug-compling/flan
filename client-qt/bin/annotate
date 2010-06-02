@@ -1,7 +1,13 @@
 #!/usr/bin/env ruby
 
+# Add client modules to the load path.
 ANNOTATE_DIR=File.dirname(__FILE__)
 $LOAD_PATH.unshift("#{ANNOTATE_DIR}/../lib")
+
+# Add included gems to the load path.
+Dir.glob("#{ANNOTATE_DIR}/../third-party/gems/gems/*/lib").each { |libDir|
+	$LOAD_PATH.unshift(libDir)
+}
 
 require 'ui/AnnotateMainWindow'
 

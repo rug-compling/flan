@@ -1,8 +1,8 @@
 require 'Qt4'
 
 require 'flan_client'
-require 'ConnectDialog'
-require 'ui_AnnotateMainWindow'
+require 'ui/ConnectDialog'
+require 'ui/ui_AnnotateMainWindow'
 
 class JudgmentItem < Qt::StandardItem
   attr_accessor :logicalFormId, :realizationId, :judgmentId

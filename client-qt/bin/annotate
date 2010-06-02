@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+ANNOTATE_DIR=File.dirname(__FILE__)
+$LOAD_PATH.unshift("#{ANNOTATE_DIR}/../lib")
+
+require 'ui/AnnotateMainWindow'
+
+app = Qt::Application.new(ARGV)
+window = AnnotateMainWindow.new
+window.show
+app.exec

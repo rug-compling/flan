@@ -1,4 +1,20 @@
-UI_FILES = FileList['*.ui']
+require 'rake/gempackagetask'
+
+UI_FILES = FileList['ui/*.ui']
+
+spec = Gem::Specification.new do |s|
+  s.name	= "flan_client"
+  s.summary	= "Client for Flan (fluency annotation) servers"
+  s.version = '0.0.1'
+  s.author = 'Daniel de Kok'
+  s.email = 'me@danieldk.eu'
+  s.platform = 'Gem::Platform::RUBY'
+  s.required_ruby_version = '>=1.8'
+  s.files = Dir['**/**']
+  s.executables = [ 'annotate' ]
+end
+
+Rake::GemPackageTask.new(spec).define
 
 task :default => [:uic]
 
@@ -6,7 +22,7 @@ task :uic do
   UI_FILES.each { |uiFile|
     base = File.basename(uiFile, '.ui')
     rbFile = "ui_#{base}.rb"
-    if !system('rbuic4', '-o', rbFile, uiFile)
+    if !system('rbuic4', '-o', "lib/flan_client/#{rbFile}", uiFile)
       STDERR.puts("Could not generate #{rbFile}")
     end
   }

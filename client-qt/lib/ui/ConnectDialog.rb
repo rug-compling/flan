@@ -1,6 +1,6 @@
 require 'Qt4'
 
-require 'ui_ConnectDialog'
+require 'ui/ui_ConnectDialog'
 
 class ConnectDialog < Qt::Dialog
   def initialize(parent = nil)

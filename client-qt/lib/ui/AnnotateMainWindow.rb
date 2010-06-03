@@ -101,7 +101,14 @@ class AnnotateMainWindow < Qt::MainWindow
       item.setEditable(false)
       item.id = lf['id']
       item.key = lf['key']
-      item.judgmentCount = lf['judgmentCount']
+      item.judgmentCount = lf['judgment_count'].to_i
+      
+      if item.judgmentCount == 1
+        item.setBackground(Qt::Brush.new(Qt::Color.fromRgb(230, 255, 230)))
+      elsif item.judgmentCount > 1
+        item.setBackground(Qt::Brush.new(Qt::Color.fromRgb(200, 255, 200)))
+      end
+            
       model.appendRow(item)
     }
     

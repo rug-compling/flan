@@ -8,16 +8,16 @@ class JudgmentItem < Qt::StandardItem
   attr_accessor :logicalFormId, :realizationId, :judgmentId
 end
 
+class LogicalFormItem < Qt::StandardItem
+  attr_accessor :id, :key, :judgmentCount
+end
+
 class AnnotateMainWindow < Qt::MainWindow  
   def initialize(parent = nil)
     # Set up user interface
     super
     @base = Ui::AnnotateMainWindow.new
     @base.setupUi self
-        
-    Qt::Object.connect(@base.lfListWidget, SIGNAL('currentRowChanged(int)'),
-      self, SLOT('lfChanged(int)'))
-    
     
     @connectDialog = ConnectDialog.new(self)
     Qt::Object.connect(@connectDialog, SIGNAL('rejected()'), self, SLOT('close()'))
@@ -38,8 +38,8 @@ class AnnotateMainWindow < Qt::MainWindow
 
   private
   
-  slots 'close()', 'lfChanged(int)', 'showLfs()', 'judgmentChanged(QStandardItem *)',
-    'zoomIn(bool)', 'zoomOut(bool)'
+  slots 'close()', 'lfChanged(const QModelIndex &, const QModelIndex &)',
+    'showLfs()', 'judgmentChanged(QStandardItem *)', 'zoomIn(bool)', 'zoomOut(bool)'
     
   ZOOM_OUT_FACTOR = 0.8
   ZOOM_IN_FACTOR = 1.0 / ZOOM_OUT_FACTOR
@@ -86,7 +86,7 @@ class AnnotateMainWindow < Qt::MainWindow
     # Make database connection, and retrieve logical forms    
     @client = FlanClient::FlanClient.new(url, email, password)
     begin
-      @lfs = @client.lf_keys
+      lfs = @client.lf_keys
     rescue => e
       Qt::MessageBox.critical(self, "Connection error",
         "Could not connect to #{@connectDialog.server}:\n#{e}")
@@ -94,16 +94,31 @@ class AnnotateMainWindow < Qt::MainWindow
       return
     end
     
-    @lfs.each { |lf|
-      @base.lfListWidget.addItem(lf['key'])
-    }    
+    model = Qt::StandardItemModel.new(@base.lfListView)
+    
+    lfs.each { |lf|
+      item = LogicalFormItem.new(lf['key'])
+      item.setEditable(false)
+      item.id = lf['id']
+      item.key = lf['key']
+      item.judgmentCount = lf['judgmentCount']
+      model.appendRow(item)
+    }
+    
+    selectionModel = Qt::ItemSelectionModel.new(model)
+    Qt::Object.connect(selectionModel,
+      SIGNAL('currentChanged(const QModelIndex &, QModelIndex const &)'),
+      self, SLOT('lfChanged(const QModelIndex &, QModelIndex const &)'))
+    
+    @base.lfListView.setModel(model)
+    @base.lfListView.setSelectionModel(selectionModel)
   end
   
-  def lfChanged(row)
-    lfId = @lfs[row]['id']
+  def lfChanged(current, prev)
+    item = @base.lfListView.model.itemFromIndex(current)
     begin
-      showStructure(lfId)
-      showRealizations(lfId)
+      showStructure(item.id)
+      showRealizations(item.id)
     rescue => e
       Qt::MessageBox.critical(self, "Connection error",
         "Could not retrieve data from #{@connectDialog.server}:\n#{e}")

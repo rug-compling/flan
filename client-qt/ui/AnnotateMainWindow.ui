@@ -26,7 +26,7 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QListWidget" name="lfListWidget"/>
+         <widget class="QListView" name="lfListView"/>
         </item>
        </layout>
       </widget>

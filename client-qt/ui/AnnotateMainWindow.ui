@@ -52,6 +52,30 @@
          <item>
           <widget class="QListView" name="realizationsListView"/>
          </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Suggest:</string>
+             </property>
+             <property name="buddy">
+              <cstring>suggestLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="suggestLineEdit"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="addSuggestPushButton">
+             <property name="text">
+              <string>Add</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
         </layout>
        </widget>
       </widget>

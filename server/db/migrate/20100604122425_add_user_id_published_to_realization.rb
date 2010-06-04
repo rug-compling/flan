@@ -1,7 +1,7 @@
 class AddUserIdPublishedToRealization < ActiveRecord::Migration
   def self.up
     add_column :realizations, :user_id, :integer
-    add_column :realizations, :published, :boolean, :default => 0
+    add_column :realizations, :published, :boolean, :default => false, :null => false
   end
 
   def self.down

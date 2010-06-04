@@ -22,6 +22,15 @@ module FlanClient
       judgment['id']
     end
     
+    def createRealization(logicalFormId, sentence)
+      payload = {:realization => {
+        :logical_form_id => logicalFormId,
+        :sentence => sentence
+      }}.to_json
+      realizationJSON = @resource["logical_forms/#{logicalFormId}/realizations"].post(
+        payload, :content_type => :json, :accept => :json)
+    end
+    
     def deleteJudgment(judgmentId)
       @resource["judgments/#{judgmentId}"].delete
     end

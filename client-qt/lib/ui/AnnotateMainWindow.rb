@@ -19,6 +19,12 @@ class AnnotateMainWindow < Qt::MainWindow
     @base = Ui::AnnotateMainWindow.new
     @base.setupUi self
     
+    Qt::Object.connect(@base.addSuggestPushButton, SIGNAL('clicked()'), self,
+      SLOT('addRealization()'))
+    Qt::Object.connect(@base.suggestLineEdit, SIGNAL('returnPressed()'), self,
+      SLOT('addRealization()'))
+      
+    
     @connectDialog = ConnectDialog.new(self)
     Qt::Object.connect(@connectDialog, SIGNAL('rejected()'), self, SLOT('close()'))
     Qt::Object.connect(@connectDialog, SIGNAL('accepted()'), self, SLOT('showLfs()'))
@@ -30,7 +36,7 @@ class AnnotateMainWindow < Qt::MainWindow
     
     @connectDialog.show
   end
-  
+    
   def close
     writeSettings
     super
@@ -38,11 +44,21 @@ class AnnotateMainWindow < Qt::MainWindow
 
   private
   
-  slots 'close()', 'lfChanged(const QModelIndex &, const QModelIndex &)',
+  slots 'addRealization()', 'close()', 'lfChanged(const QModelIndex &, const QModelIndex &)',
     'showLfs()', 'judgmentChanged(QStandardItem *)', 'zoomIn(bool)', 'zoomOut(bool)'
     
   ZOOM_OUT_FACTOR = 0.8
   ZOOM_IN_FACTOR = 1.0 / ZOOM_OUT_FACTOR
+
+  def addRealization
+    realization = @base.suggestLineEdit.text
+    
+    if !realization.empty?
+      idx = @base.lfListView.currentIndex
+      item = @base.lfListView.model.itemFromIndex(idx)
+      @client.createRealization(item.id, realization)
+    end
+  end
   
   def judgmentChanged(item)
     if (item.checkState == Qt::Checked)

@@ -22,7 +22,7 @@ class RealizationsController < ApplicationController
     uid = current_user.id
 
     @realizations = Realization.find(:all,
-      :conditions => "realizations.logical_form_id = '#{params[:logical_form_id]}' AND realizations.published = 1",
+      :conditions => ["realizations.logical_form_id = ? AND realizations.published = ?", params[:logical_form_id], true],
       :joins => "LEFT JOIN judgments ON judgments.realization_id = realizations.id AND judgments.user_id = #{uid}",
       :select => "realizations.*, judgments.id AS judgment_id, CASE WHEN judgments.user_id IS NULL THEN 0 ELSE 1 END AS most_fluent")
 
@@ -32,8 +32,6 @@ class RealizationsController < ApplicationController
       :joins => "LEFT JOIN judgments ON judgments.realization_id = realizations.id AND judgments.user_id = #{uid}",
       :select => "realizations.*, judgments.id AS judgment_id, CASE WHEN judgments.user_id IS NULL THEN 0 ELSE 1 END AS most_fluent")
     
-    p realizations_user
-
     @realizations.concat(realizations_user)
 
     respond_to do |format|

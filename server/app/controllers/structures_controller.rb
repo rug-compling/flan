@@ -1,4 +1,6 @@
 class StructuresController < ApplicationController
+  before_filter :authenticate_user!
+
   def show
     logical_form = LogicalForm.find(params[:logical_form_id])
 

@@ -1,4 +1,6 @@
 class LogicalFormsController < ApplicationController
+  before_filter :authenticate_user!
+
   def index
     @logical_forms = LogicalForm.find(:all,
     :joins => 'LEFT JOIN judgments ON judgments.logical_form_id = logical_forms.id',

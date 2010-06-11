@@ -57,6 +57,9 @@ class AnnotateMainWindow < Qt::MainWindow
       idx = @base.lfListView.currentIndex
       item = @base.lfListView.model.itemFromIndex(idx)
       @client.createRealization(item.id, realization)
+
+      @base.suggestLineEdit.clear
+      showRealizations(item.id)
     end
   end
   

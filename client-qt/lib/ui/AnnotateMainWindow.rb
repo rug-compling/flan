@@ -44,7 +44,7 @@ class AnnotateMainWindow < Qt::MainWindow
 
   private
   
-  slots 'addRealization()', 'close()', 'lfChanged(const QModelIndex &, const QModelIndex &)',
+  slots 'addRealization()', 'close()', 'lfSelected(const QModelIndex &, const QModelIndex &)',
     'showLfs()', 'judgmentChanged(QStandardItem *)', 'zoomIn(bool)', 'zoomOut(bool)'
     
   ZOOM_OUT_FACTOR = 0.8
@@ -131,13 +131,13 @@ class AnnotateMainWindow < Qt::MainWindow
     selectionModel = Qt::ItemSelectionModel.new(model)
     Qt::Object.connect(selectionModel,
       SIGNAL('currentChanged(const QModelIndex &, QModelIndex const &)'),
-      self, SLOT('lfChanged(const QModelIndex &, QModelIndex const &)'))
+      self, SLOT('lfSelected(const QModelIndex &, QModelIndex const &)'))
     
     @base.lfListView.setModel(model)
     @base.lfListView.setSelectionModel(selectionModel)
   end
   
-  def lfChanged(current, prev)
+  def lfSelected(current, prev)
     item = @base.lfListView.model.itemFromIndex(current)
     begin
       showStructure(item.id)

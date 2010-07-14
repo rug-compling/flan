@@ -24,13 +24,13 @@ class RealizationsController < ApplicationController
     @realizations = Realization.find(:all,
       :conditions => ["realizations.logical_form_id = ? AND realizations.published = ?", params[:logical_form_id], true],
       :joins => "LEFT JOIN judgments ON judgments.realization_id = realizations.id AND judgments.user_id = #{uid}",
-      :select => "realizations.*, judgments.id AS judgment_id, CASE WHEN judgments.user_id IS NULL THEN 0 ELSE 1 END AS most_fluent")
+      :select => "realizations.*, judgments.id AS judgment_id, 0 AS user_contributed, CASE WHEN judgments.user_id IS NULL THEN 0 ELSE 1 END AS most_fluent")
 
     realizations_user = Realization.find(:all,
       :conditions => ["realizations.logical_form_id = ? AND realizations.user_id = ? AND
         realizations.published = ?", params[:logical_form_id], uid, false],
       :joins => "LEFT JOIN judgments ON judgments.realization_id = realizations.id AND judgments.user_id = #{uid}",
-      :select => "realizations.*, judgments.id AS judgment_id, CASE WHEN judgments.user_id IS NULL THEN 0 ELSE 1 END AS most_fluent")
+      :select => "realizations.*, judgments.id AS judgment_id, 1 AS user_contributed, CASE WHEN judgments.user_id IS NULL THEN 0 ELSE 1 END AS most_fluent")
     
     @realizations.concat(realizations_user)
 

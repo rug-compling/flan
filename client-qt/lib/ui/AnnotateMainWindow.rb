@@ -5,7 +5,8 @@ require 'ui/ConnectDialog'
 require 'ui/ui_AnnotateMainWindow'
 
 class JudgmentItem < Qt::StandardItem
-  attr_accessor :logicalFormId, :realizationId, :judgmentId
+  attr_accessor :logicalFormId, :realizationId, :judgmentId,
+    :userContributed
 end
 
 class LogicalFormItem < Qt::StandardItem
@@ -23,6 +24,8 @@ class AnnotateMainWindow < Qt::MainWindow
       SLOT('addRealization()'))
     Qt::Object.connect(@base.suggestLineEdit, SIGNAL('returnPressed()'), self,
       SLOT('addRealization()'))
+    Qt::Object.connect(@base.removeSuggestPushButton, SIGNAL('clicked()'), self,
+      SLOT('removeSuggestion()'))
       
     
     @connectDialog = ConnectDialog.new(self)
@@ -44,8 +47,15 @@ class AnnotateMainWindow < Qt::MainWindow
 
   private
   
-  slots 'addRealization()', 'close()', 'lfSelected(const QModelIndex &, const QModelIndex &)',
-    'showLfs()', 'judgmentChanged(QStandardItem *)', 'zoomIn(bool)', 'zoomOut(bool)'
+  slots 'addRealization()',
+  'close()',
+  'lfSelected(const QModelIndex &, const QModelIndex &)',
+  'showLfs()',
+  'judgmentChanged(QStandardItem *)',
+  'realizationSelected(const QModelIndex &, const QModelIndex &)',
+  'removeSuggestion()',
+  'zoomIn(bool)',
+  'zoomOut(bool)'   
     
   ZOOM_OUT_FACTOR = 0.8
   ZOOM_IN_FACTOR = 1.0 / ZOOM_OUT_FACTOR
@@ -96,6 +106,12 @@ class AnnotateMainWindow < Qt::MainWindow
     email = settings.value('email').toString
     @connectDialog.email = email
   end
+
+  def removeSuggestion
+    idx = @base.realizationsListView.selectionModel.currentIndex
+    item = @base.realizationsListView.model.itemFromIndex(idx)
+    @client.deleteRealization(item.realizationId)
+  end
   
   def showLfs
     url = @connectDialog.server
@@ -142,6 +158,7 @@ class AnnotateMainWindow < Qt::MainWindow
   
   def lfSelected(current, prev)
     item = @base.lfListView.model.itemFromIndex(current)
+    @base.removeSuggestPushButton.enabled = false
     begin
       showStructure(item.id)
       showRealizations(item.id)
@@ -149,6 +166,11 @@ class AnnotateMainWindow < Qt::MainWindow
       Qt::MessageBox.critical(self, "Connection error",
         "Could not retrieve data from #{@connectDialog.server}:\n#{e}")
     end
+  end
+
+  def realizationSelected(current, prev)
+    item = @base.realizationsListView.model.itemFromIndex(current)
+    @base.removeSuggestPushButton.enabled = item.userContributed
   end
   
   def showStructure(lfId)
@@ -176,6 +198,7 @@ class AnnotateMainWindow < Qt::MainWindow
       item.setEditable(false)
       item.logicalFormId = rel[:logicalFormId]
       item.realizationId = rel[:realizationId]
+      item.userContributed = rel[:userContributed]
       
       if rel[:most_fluent]
         item.judgmentId = rel[:judgmentId]
@@ -189,8 +212,15 @@ class AnnotateMainWindow < Qt::MainWindow
     
     Qt::Object.connect(model, SIGNAL('itemChanged(QStandardItem *)'),
       self, SLOT('judgmentChanged(QStandardItem *)'))
+
+    selectionModel = Qt::ItemSelectionModel.new(model)
+    Qt::Object.connect(selectionModel,
+      SIGNAL('currentChanged(const QModelIndex &, QModelIndex const &)'),
+      self,
+      SLOT('realizationSelected(const QModelIndex &, QModelIndex const &)'))
     
     @base.realizationsListView.setModel(model)
+    @base.realizationsListView.setSelectionModel(selectionModel)
   end
   
   def writeSettings

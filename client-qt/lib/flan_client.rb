@@ -34,6 +34,10 @@ module FlanClient
     def deleteJudgment(judgmentId)
       @resource["judgments/#{judgmentId}"].delete
     end
+
+    def deleteRealization(realizationId)
+      @resource["realizations/#{realizationId}"].delete
+    end
   
     def lf_keys
       keysJSON = @resource['logical_forms.json?restrict=keys'].get
@@ -44,9 +48,12 @@ module FlanClient
       relsJSON = @resource["logical_forms/#{lfKey}/realizations.json"].get
       relsRaw = JSON.parse(relsJSON)
       relsRaw.map {|r| {
-        :sentence => r['sentence'], :most_fluent => r['most_fluent'],
-        :logicalFormId => r['logical_form_id'], :realizationId => r['id'],
-        :judgmentId => r['judgment_id']
+        :sentence => r['sentence'],
+        :most_fluent => r['most_fluent'],
+        :logicalFormId => r['logical_form_id'],
+        :realizationId => r['id'],
+        :judgmentId => r['judgment_id'],
+        :userContributed => r['user_contributed'] == '1' ? true : false
         } }
     end
     

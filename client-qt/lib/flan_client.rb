@@ -35,8 +35,8 @@ module FlanClient
       @resource["judgments/#{judgmentId}"].delete
     end
 
-    def deleteRealization(realizationId)
-      @resource["realizations/#{realizationId}"].delete
+    def deleteRealization(logicalFormId, realizationId)
+      @resource["logical_forms/#{logicalFormId}/realizations/#{realizationId}"].delete
     end
   
     def lf_keys

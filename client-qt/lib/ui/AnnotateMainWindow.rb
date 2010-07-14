@@ -110,7 +110,8 @@ class AnnotateMainWindow < Qt::MainWindow
   def removeSuggestion
     idx = @base.realizationsListView.selectionModel.currentIndex
     item = @base.realizationsListView.model.itemFromIndex(idx)
-    @client.deleteRealization(item.realizationId)
+    @client.deleteRealization(item.logicalFormId, item.realizationId)
+    showRealizations(item.logicalFormId)
   end
   
   def showLfs
@@ -158,7 +159,6 @@ class AnnotateMainWindow < Qt::MainWindow
   
   def lfSelected(current, prev)
     item = @base.lfListView.model.itemFromIndex(current)
-    @base.removeSuggestPushButton.enabled = false
     begin
       showStructure(item.id)
       showRealizations(item.id)
@@ -189,6 +189,10 @@ class AnnotateMainWindow < Qt::MainWindow
   end
 
   def showRealizations(lfId)
+    # Disable the suggestion removal button, a (new) list of realizations
+    # will not have any realization selected.
+    @base.removeSuggestPushButton.enabled = false
+
     model = Qt::StandardItemModel.new(@base.realizationsListView)
     
     realizations = @client.realizations(lfId)

@@ -13,8 +13,7 @@ database stores various information:
   logical form.
 
 The server was developed using Ruby on Rails, and is takes a RESTful
-approach. The client is written in Ruby and Qt. Since QtRuby is not
-readily available on OS X, work is also being done on a Cocoa client.
+approach. The client is written in Ruby and Qt.
 
 Authors
 -------

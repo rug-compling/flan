@@ -18,6 +18,19 @@ class RealizationsController < ApplicationController
     end
   end
 
+  def destroy
+    uid = current_user.id
+    Realization.find(params[:id], :conditions => [
+      "user_id = '#{uid}'",
+      "published = 0"
+    ]).destroy
+
+    respond_to do |format|
+      format.xml  { head :ok }
+      format.json  { head :ok }
+    end
+  end
+
   def index
     uid = current_user.id
 

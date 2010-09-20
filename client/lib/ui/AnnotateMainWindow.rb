@@ -248,7 +248,9 @@ class AnnotateMainWindow < Qt::MainWindow
   end
   
   def zoomFit(checked)
-    @base.structureGraphicsView.fitInView(@treeItem, Qt::KeepAspectRatio)
+    if (!@treeItem.nil?)
+      @base.structureGraphicsView.fitInView(@treeItem, Qt::KeepAspectRatio)
+    end
   end
   
   def zoomIn(checked)

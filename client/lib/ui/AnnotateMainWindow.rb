@@ -32,6 +32,7 @@ class AnnotateMainWindow < Qt::MainWindow
     Qt::Object.connect(@connectDialog, SIGNAL('rejected()'), self, SLOT('close()'))
     Qt::Object.connect(@connectDialog, SIGNAL('accepted()'), self, SLOT('showLfs()'))
     
+    Qt::Object.connect(@base.fitAction, SIGNAL('triggered(bool)'), self, SLOT('zoomFit(bool)'))    
     Qt::Object.connect(@base.zoomInAction, SIGNAL('triggered(bool)'), self, SLOT('zoomIn(bool)'))
     Qt::Object.connect(@base.zoomOutAction, SIGNAL('triggered(bool)'), self, SLOT('zoomOut(bool)'))
     
@@ -54,6 +55,7 @@ class AnnotateMainWindow < Qt::MainWindow
   'judgmentChanged(QStandardItem *)',
   'realizationSelected(const QModelIndex &, const QModelIndex &)',
   'removeSuggestion()',
+  'zoomFit(bool)',
   'zoomIn(bool)',
   'zoomOut(bool)'   
     
@@ -180,12 +182,12 @@ class AnnotateMainWindow < Qt::MainWindow
     
     scene = Qt::GraphicsScene.new(@base.structureGraphicsView)
 
-    svgGraphicsItem = Qt::GraphicsSvgItem.new()
-    svgGraphicsItem.setSharedRenderer(svgRenderer)
-    scene.addItem(svgGraphicsItem)
+    @treeItem = Qt::GraphicsSvgItem.new()
+    @treeItem.setSharedRenderer(svgRenderer)
+    scene.addItem(@treeItem)
     
     @base.structureGraphicsView.setScene(scene)
-    @base.structureGraphicsView.fitInView(svgGraphicsItem, Qt::KeepAspectRatio)
+    @base.structureGraphicsView.fitInView(@treeItem, Qt::KeepAspectRatio)
   end
 
   def showRealizations(lfId)
@@ -243,6 +245,10 @@ class AnnotateMainWindow < Qt::MainWindow
     # Login
     settings.setValue('server', Qt::Variant.new(@connectDialog.server))
     settings.setValue('email', Qt::Variant.new(@connectDialog.email))
+  end
+  
+  def zoomFit(checked)
+    @base.structureGraphicsView.fitInView(@treeItem, Qt::KeepAspectRatio)
   end
   
   def zoomIn(checked)

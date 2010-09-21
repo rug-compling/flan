@@ -112,6 +112,9 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
+    <addaction name="previousAction"/>
+    <addaction name="nextAction"/>
+    <addaction name="separator"/>
     <addaction name="zoomInAction"/>
     <addaction name="zoomOutAction"/>
     <addaction name="fitAction"/>
@@ -130,6 +133,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="previousAction"/>
+   <addaction name="nextAction"/>
    <addaction name="zoomInAction"/>
    <addaction name="zoomOutAction"/>
    <addaction name="fitAction"/>
@@ -176,6 +181,30 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="previousAction">
+   <property name="icon">
+    <iconset resource="../resources/flan.qrc">
+     <normaloff>:/icons/previous.png</normaloff>:/icons/previous.png</iconset>
+   </property>
+   <property name="text">
+    <string>Previous</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="nextAction">
+   <property name="icon">
+    <iconset resource="../resources/flan.qrc">
+     <normaloff>:/icons/next.png</normaloff>:/icons/next.png</iconset>
+   </property>
+   <property name="text">
+    <string>Next</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
  </widget>

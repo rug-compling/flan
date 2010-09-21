@@ -35,6 +35,8 @@ class AnnotateMainWindow < Qt::MainWindow
     Qt::Object.connect(@base.fitAction, SIGNAL('triggered(bool)'), self, SLOT('zoomFit(bool)'))    
     Qt::Object.connect(@base.zoomInAction, SIGNAL('triggered(bool)'), self, SLOT('zoomIn(bool)'))
     Qt::Object.connect(@base.zoomOutAction, SIGNAL('triggered(bool)'), self, SLOT('zoomOut(bool)'))
+    Qt::Object.connect(@base.nextAction, SIGNAL('triggered(bool)'), self, SLOT('nextLf(bool)'))
+    Qt::Object.connect(@base.previousAction, SIGNAL('triggered(bool)'), self, SLOT('previousLf(bool)'))
     
     readSettings
     
@@ -51,6 +53,8 @@ class AnnotateMainWindow < Qt::MainWindow
   slots 'addRealization()',
   'close()',
   'lfSelected(const QModelIndex &, const QModelIndex &)',
+  'nextLf(bool)',
+  'previousLf(bool)',
   'showLfs()',
   'judgmentChanged(QStandardItem *)',
   'realizationSelected(const QModelIndex &, const QModelIndex &)',
@@ -73,6 +77,20 @@ class AnnotateMainWindow < Qt::MainWindow
       @base.suggestLineEdit.clear
       showRealizations(item.id)
     end
+  end
+
+  def changeLf(relPosition)
+    modelIndex = @base.lfListView.currentIndex
+    if modelIndex.nil?
+      return
+    end
+
+    nextIndex = modelIndex.sibling(modelIndex.row + relPosition,
+      modelIndex.column)
+    
+    return if !nextIndex.valid?
+
+    @base.lfListView.setCurrentIndex(nextIndex)
   end
   
   def judgmentChanged(item)
@@ -168,6 +186,14 @@ class AnnotateMainWindow < Qt::MainWindow
       Qt::MessageBox.critical(self, "Connection error",
         "Could not retrieve data from #{@connectDialog.server}:\n#{e}")
     end
+  end
+
+  def nextLf(checked)
+    changeLf(+1)
+  end
+
+  def previousLf(checked)
+    changeLf(-1)
   end
 
   def realizationSelected(current, prev)

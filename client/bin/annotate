@@ -9,6 +9,8 @@ Dir.glob("#{ANNOTATE_DIR}/../third-party/gems/gems/*/lib").each { |libDir|
 	$LOAD_PATH.unshift(libDir)
 }
 
+require 'Qt4'
+require 'ui/qrc_flan'
 require 'ui/AnnotateMainWindow'
 
 app = Qt::Application.new(ARGV)

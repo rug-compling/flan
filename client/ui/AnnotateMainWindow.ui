@@ -143,6 +143,10 @@
    </property>
   </action>
   <action name="zoomInAction">
+   <property name="icon">
+    <iconset resource="../resources/flan.qrc">
+     <normaloff>:/icons/viewmag+.png</normaloff>:/icons/viewmag+.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Zoom In</string>
    </property>
@@ -151,6 +155,10 @@
    </property>
   </action>
   <action name="zoomOutAction">
+   <property name="icon">
+    <iconset resource="../resources/flan.qrc">
+     <normaloff>:/icons/viewmag-.png</normaloff>:/icons/viewmag-.png</iconset>
+   </property>
    <property name="text">
     <string>Zoom &amp;Out</string>
    </property>
@@ -159,6 +167,10 @@
    </property>
   </action>
   <action name="fitAction">
+   <property name="icon">
+    <iconset resource="../resources/flan.qrc">
+     <normaloff>:/icons/viewmagfit.png</normaloff>:/icons/viewmagfit.png</iconset>
+   </property>
    <property name="text">
     <string>Fit</string>
    </property>
@@ -167,7 +179,9 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources/flan.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>action_Quit</sender>

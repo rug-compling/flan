@@ -1,6 +1,7 @@
 UI_FILES = FileList['ui/*.ui']
+RESOURCE_FILES = FileList['resources/*.qrc']
 
-task :default => [:uic]
+task :default => [:uic, :rcc]
 
 task :uic do
   UI_FILES.each { |uiFile|
@@ -8,6 +9,16 @@ task :uic do
     rbFile = "ui_#{base}.rb"
     if !system('rbuic4', '-o', "lib/ui/#{rbFile}", uiFile)
       STDERR.puts("Could not generate #{rbFile}...")
+    end
+  }
+end
+
+task :rcc do
+  RESOURCE_FILES.each { |qrcFile|
+    base = File.basename(qrcFile, '.qrc')
+    rbFile = "qrc_#{base}.rb"
+    if !system('rbrcc', '-o', "lib/ui/#{rbFile}", qrcFile)
+      STDERR.puts("Could not generate #{qrcFile}...")
     end
   }
 end
